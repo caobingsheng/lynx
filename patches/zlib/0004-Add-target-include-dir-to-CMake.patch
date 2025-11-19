@@ -1,0 +1,26 @@
+From 1cd0c2e812523ee026af6ecd902456f5b0002e01 Mon Sep 17 00:00:00 2001
+From: "suguannan.906" <suguannan.906>
+Date: Mon, 8 Dec 2025 17:52:30 +0800
+Subject: [PATCH] [PATCH] Add target include directories to CMakeLists.txt.
+
+---
+ CMakeLists.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 471a3a4..6c14624 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -194,7 +194,9 @@ if(MINGW)
+ endif(MINGW)
+ 
+ add_library(zlib SHARED ${ZLIB_SRCS} ${ZLIB_DLL_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
++target_include_directories(zlib PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+ add_library(zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
++target_include_directories(zlibstatic PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+ set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
+ set_target_properties(zlib PROPERTIES SOVERSION 1)
+ 
+-- 
+2.49.0
+
