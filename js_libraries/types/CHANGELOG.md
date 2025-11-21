@@ -1,4 +1,12 @@
 # CHANGELOG
+## 3.7.1
+- Add `experimental-search-ref-anchor-strategy` property for `<list>` element.
+
+## 3.7.0
+
+### Major Changes
+- Update into Lynx3.7.
+
 ## 3.6.8
 - Introduce `global-props` property for `<frame>` element.
 
