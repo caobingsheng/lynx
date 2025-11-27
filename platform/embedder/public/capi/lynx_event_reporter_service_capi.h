@@ -7,8 +7,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "lynx/base/include/value/lynx_value_types.h"
 #include "lynx_export.h"
+#include "lynx_value_types.h"
 
 LYNX_EXTERN_C_BEGIN
 

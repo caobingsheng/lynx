@@ -118,7 +118,16 @@ export default function HomePage(props: HomePageProps) {
         </view>
       </view>
 
-      <view className={withTheme('input-card-url')}>
+      <view
+        className={withTheme('input-card-url')}
+        style={{
+          height:
+            lynx.__globalProps.platform === 'macos' ||
+            lynx.__globalProps.platform === 'windows'
+              ? '40%'
+              : '28%',
+        }}
+      >
         <text className={withTheme('bold-text')}>Card URL</text>
         <explorer-input
           className="input-box"
