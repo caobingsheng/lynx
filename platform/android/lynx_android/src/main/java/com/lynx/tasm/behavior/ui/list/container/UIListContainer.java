@@ -558,6 +558,16 @@ public class UIListContainer extends UISimpleView<ListContainerView>
             }
 
             @Override
+            public int getContentHeight() {
+              return getView().getLinearLayout().getHeight();
+            }
+
+            @Override
+            public int getContentWidth() {
+              return getView().getLinearLayout().getWidth();
+            }
+
+            @Override
             public int getChildrenCount() {
               return getView().getLinearLayout().getChildCount();
             }
