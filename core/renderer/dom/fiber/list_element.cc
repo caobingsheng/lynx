@@ -359,6 +359,21 @@ ParallelFlushReturn ListElement::PrepareForCreateOrUpdate() {
       FiberElement::SetAttributeInternal(
           BASE_STATIC_STRING(list::kExperimentalBatchRenderStrategy),
           lepus::Value(static_cast<int>(batch_render_strategy)));
+      HandleDelayTask([this]() {
+        report::EventTracker::OnEvent(
+            [= batch_render_strategy,
+             id_selector = data_model_->idSelector().str(),
+             enable_parallel_element =
+                 element_manager_->GetEnableParallelElement()](
+                report::MoveOnlyEvent& event) {
+              event.SetName("lynxsdk_list_batch_render_statistic");
+              event.SetProps("id_selector", id_selector);
+              event.SetProps("strategy",
+                             static_cast<int>(batch_render_strategy));
+              event.SetProps("enable_parallel_element",
+                             enable_parallel_element);
+            });
+      });
     }
     // Handle experimental-continuous-resolve-tree
     it = attr_map.find(
