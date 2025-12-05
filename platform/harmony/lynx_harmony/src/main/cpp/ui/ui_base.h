@@ -221,6 +221,7 @@ class LYNX_EXPORT UIBase : public std::enable_shared_from_this<UIBase>,
   float margin_right_{0};
   float margin_bottom_{0};
   std::vector<float> sticky_value_;
+  float opacity_{1.f};
   void GetTransformValue(float left, float right, float top, float bottom,
                          std::vector<float>& point);
   void GetLocationOnScreen(std::pair<float, float>& point);

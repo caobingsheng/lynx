@@ -57,6 +57,7 @@ constexpr uint32_t kFlagAccessibilityTraits = 1 << 10;
 constexpr uint32_t kFlagAccessibilityMode = 1 << 11;
 constexpr uint32_t kFlagAccessibilityExclusive = 1 << 12;
 constexpr uint32_t kFlagBackgroundColor = 1 << 13;
+constexpr uint32_t kFlagBlendMode = 1 << 14;
 
 // std::sqrt(5.0) is not constexpr in C++17, so we use an approximation
 // to allow this value to be used in compile-time constants.
@@ -481,6 +482,17 @@ void UIBase::OnNodeReady() {
     InitDrawNode();
   }
 
+  if (dirty_flags_ & kFlagBlendMode) {
+    if (base::FloatsNotEqual(opacity_, 1.0)) {
+      NodeManager::Instance().SetAttributeWithNumberValue(
+          DrawNode(), NODE_BLEND_MODE,
+          static_cast<int32_t>(ARKUI_BLEND_MODE_SRC_OVER),
+          static_cast<int32_t>(BLEND_APPLY_TYPE_OFFSCREEN));
+    } else {
+      NodeManager::Instance().ResetAttribute(DrawNode(), NODE_BLEND_MODE);
+    }
+  }
+
   if (basic_shape_ &&
       (dirty_flags_ & (kFlagFrameChanged | kFlagFrameSizeChanged |
                        kFlagClipPathChanged)) != 0) {
@@ -572,6 +584,8 @@ void UIBase::SetOpacity(const lepus::Value& value) {
   if (value.IsNil()) {
     opacity = 1;
   }
+  opacity_ = opacity;
+  dirty_flags_ |= kFlagBlendMode;
   NodeManager::Instance().SetAttributeWithNumberValue(DrawNode(), NODE_OPACITY,
                                                       opacity);
 }
@@ -1690,6 +1704,11 @@ void UIBase::InitDrawNode() {
     NodeManager::Instance().ResetAttribute(Node(), NODE_OPACITY);
     NodeManager::Instance().SetAttributeWithNumberValue(draw_node_,
                                                         NODE_OPACITY, opacity);
+    // update blend
+    auto blend = NodeManager::Instance().GetAttribute(Node(), NODE_BLEND_MODE);
+    NodeManager::Instance().ResetAttribute(Node(), NODE_BLEND_MODE);
+    NodeManager::Instance().SetAttribute(draw_node_, NODE_BLEND_MODE, blend);
+
     // update visibility
     int32_t visibility{ARKUI_VISIBILITY_VISIBLE};
     NodeManager::Instance().GetAttributeValues(Node(), NODE_VISIBILITY,

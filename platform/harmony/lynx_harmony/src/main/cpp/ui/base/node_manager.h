@@ -58,7 +58,7 @@ class NodeManager {
   ArkUI_NodeHandle CreateNode(ArkUI_NodeType type);
   void DisposeNode(ArkUI_NodeHandle node);
   bool SetAttribute(ArkUI_NodeHandle node, ArkUI_NodeAttributeType type,
-                    ArkUI_AttributeItem* item);
+                    const ArkUI_AttributeItem* item);
   const ArkUI_AttributeItem* GetAttribute(ArkUI_NodeHandle node,
                                           ArkUI_NodeAttributeType type);
 
