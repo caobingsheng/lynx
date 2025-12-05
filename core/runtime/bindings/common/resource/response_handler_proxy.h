@@ -54,17 +54,10 @@ class ResponseHandlerProxy
    */
   virtual void AddResourceListener(
       base::MoveOnlyClosure<void, tasm::BundleResourceInfo> closure) {
-    promise_->AddCallback(
-        [weak_self = weak_from_this(), closure = std::move(closure)](
-            tasm::BundleResourceInfo bundle_info) mutable {
-          auto self = weak_self.lock();
-          if (self) {
-            self->delegate_.InvokeResponsePromiseCallback(
-                [bundle_info, closure = std::move(closure)]() {
-                  closure(bundle_info);
-                });
-          }
-        });
+    promise_->AddCallback([closure = std::move(closure)](
+                              tasm::BundleResourceInfo bundle_info) mutable {
+      closure(std::move(bundle_info));
+    });
   };
 
  protected:

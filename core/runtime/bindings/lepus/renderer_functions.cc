@@ -766,16 +766,20 @@ RENDERER_FUNCTION_CC(WaitingForResponse) {
 
 RENDERER_FUNCTION_CC(AddListenerForResponse) {
   CHECK_ARGC_GE(AddListenerForResponse, 1);
-  CONVERT_ARG_AND_CHECK(arg0, 0, Closure, AddListenerForResponse);
+  CONVERT_ARG_AND_CHECK(arg0, 0, Callable, AddListenerForResponse);
   auto binding_proxy = LEPUS_CONTEXT()->GetCurrentThis(argv, argc - 1);
   ResponseHandlerInLepus* response_handler =
       ResponseHandlerInLepus::GetResponseHandlerFromLepusValue(binding_proxy);
   response_handler->AddResourceListener(
-      [ctx = LEPUS_CONTEXT(), &arg0](tasm::BundleResourceInfo bundle_info) {
-        auto value = bundle_info.ConvertToLepusValue();
-        std::vector<lepus::Value> param;
-        param.push_back(value);
-        ctx->CallClosureArgs(*arg0, param);
+      [tasm = GET_TASM_POINTER(), ctx = LEPUS_CONTEXT(),
+       arg = *arg0](tasm::BundleResourceInfo bundle_info) {
+        tasm->GetDelegate().InvokeResponsePromiseCallback(
+            [bundle_info = std::move(bundle_info), arg, ctx]() mutable {
+              auto value = bundle_info.ConvertToLepusValue();
+              std::vector<lepus::Value> param;
+              param.push_back(value);
+              ctx->CallClosureArgs(arg, param);
+            });
       });
   RETURN_UNDEFINED()
 }
