@@ -1103,6 +1103,36 @@ extern NSString* const kDefaultComponentID;
   return nil;
 }
 
+- (nonnull NSArray<LynxUI*>*)uiWithFilterAll:(nonnull LynxUIFilter)filter
+                                    findRoot:(nullable LynxUI*)findRoot
+                                    maxCount:(NSInteger)maxCount {
+  NSMutableArray* outArr = [NSMutableArray array];
+  LynxUI* start = findRoot ? findRoot : _rootUI;
+  if (start == nil) {
+    return outArr;
+  }
+  [self collectUiWithFilter:filter ui:start outArr:outArr maxCount:maxCount];
+  return outArr;
+}
+
+- (bool)collectUiWithFilter:(nonnull LynxUIFilter)filter
+                         ui:(nonnull LynxUI*)ui
+                     outArr:(nonnull NSMutableArray<LynxUI*>*)outArr
+                   maxCount:(NSInteger)maxCount {
+  if (filter(ui)) {
+    [outArr addObject:ui];
+    if (maxCount > 0 && (NSInteger)[outArr count] >= maxCount) {
+      return true;
+    }
+  }
+  for (LynxUI* child in [ui children]) {
+    if ([self collectUiWithFilter:filter ui:child outArr:outArr maxCount:maxCount]) {
+      return true;
+    }
+  }
+  return false;
+}
+
 - (void)reset {
   [_uiContext.uiExposure destroyExposure];
   if ([_uiContext.intersectionManager enableNewIntersectionObserver]) {

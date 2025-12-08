@@ -553,6 +553,16 @@
   }
 }
 
+- (nonnull NSArray<LynxUI*>*)uiWithFilterAll:(nonnull LynxUIFilter)filter
+                                    findRoot:(nullable LynxUI*)findRoot
+                                    maxCount:(NSInteger)maxCount {
+  if (_templateRender != nil) {
+    return [_templateRender uiWithFilterAll:filter findRoot:findRoot maxCount:maxCount];
+  } else {
+    return @[];
+  }
+}
+
 #pragma mark - Setter & Getter
 
 - (LynxTemplateRender*)templateRender {
