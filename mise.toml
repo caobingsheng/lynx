@@ -1,0 +1,7 @@
+[tools]
+bun = "latest"
+java = "openjdk-11.0.2"
+python = "3.12"
+
+[env]
+ANDROID_HOME = "~/android/sdk"
