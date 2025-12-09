@@ -4,4 +4,8 @@ java = "openjdk-11.0.2"
 python = "3.12"
 
 [env]
-ANDROID_HOME = "~/android/sdk"
+ANDROID_HOME = "$HOME/android/sdk"
+ANDROID_SDK_ROOT = "$HOME/android/sdk"
+
+[tasks.append-env]
+run = "echo 'export ANDROID_HOME=\"$HOME/android/sdk\"'>>~/.bashrc"
